@@ -6,7 +6,7 @@ const Loading = ({ isVisible = false, text }) => {
     return (
         <Overlay
             {...{ isVisible }}
-            windowBackgroundColor="rgba(255,255,255, 0.3)"
+            windowBackgroundColor="rgba(255,255,255, 0.8)"
             overlayBackgroundColor="transparent"
             overlayStyle={styles.overlay}
             fullScreen={true}
@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     text: {
-        color: "#00a680"
+        color: "#00a680",
+        textTransform: "uppercase",
+        fontWeight: "bold"
     }
 })

@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import app from "firebase/app";
+import "firebase/auth"
+import "firebase/firebase-firestore"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBs_ArQDEDdKjdhRwk9X0qA04DKrphCPio",
@@ -10,4 +12,24 @@ const firebaseConfig = {
     appId: "1:657518132485:web:bb8d4b3e2dd594d2a0cb6c"
 };
 
-export const firebaseApp = firebase.initializeApp(firebaseConfig); 
+class FirebaseHelper {
+    constructor() {
+        const fb = app.initializeApp(firebaseConfig);
+        this.auth = fb.auth();
+        this.db = fb.firestore();
+    }
+
+    login(email, password) {
+        return this.auth.signInWithEmailAndPassword(email, password);
+    }
+
+    logout() {
+        return this.auth.signOut();
+    }
+
+    register(email, password) {
+        return this.auth.createUserWithEmailAndPassword(email, password);
+    }
+}
+
+export default new FirebaseHelper()
