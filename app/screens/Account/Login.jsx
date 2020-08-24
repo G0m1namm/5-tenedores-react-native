@@ -4,6 +4,7 @@ import { Divider } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import LoginForm from '../../components/Account/LoginForm';
 import Toast from 'react-native-easy-toast';
+import LoginFacebook from '../../components/Account/LoginFacebook';
 
 function Login() {
     const navigation = useNavigation();
@@ -27,6 +28,7 @@ function Login() {
             </View>
             <Toast ref={toastRef} position="top" opacity={0.8} />
             <Divider style={{ backgroundColor: "#00a680", marginVertical: 10 }} />
+            <LoginFacebook {...{ toastRef }} />
         </ScrollView>
     )
 }

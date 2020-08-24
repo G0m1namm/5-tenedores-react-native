@@ -1,6 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth"
 import "firebase/firebase-firestore"
+import * as facebook from 'expo-facebook';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBs_ArQDEDdKjdhRwk9X0qA04DKrphCPio",
@@ -15,12 +16,18 @@ const firebaseConfig = {
 class FirebaseHelper {
     constructor() {
         const fb = app.initializeApp(firebaseConfig);
+        facebook.initializeAsync('1300748476983773');
         this.auth = fb.auth();
+        this.authClasses = app.auth;
         this.db = fb.firestore();
     }
 
     login(email, password) {
         return this.auth.signInWithEmailAndPassword(email, password);
+    }
+
+    loginWithCredentials(credentials) {
+        return this.auth.signInWithCredential(credentials);
     }
 
     logout() {
@@ -29,6 +36,10 @@ class FirebaseHelper {
 
     register(email, password) {
         return this.auth.createUserWithEmailAndPassword(email, password);
+    }
+
+    getFacebookCredentials(token) {
+        return this.authClasses.FacebookAuthProvider.credential(token);
     }
 }
 
