@@ -1,5 +1,6 @@
 import app from "firebase/app";
 import "firebase/auth"
+import "firebase/storage"
 import "firebase/firebase-firestore"
 import * as facebook from 'expo-facebook';
 
@@ -20,6 +21,7 @@ class FirebaseHelper {
         this.auth = fb.auth();
         this.authClasses = app.auth;
         this.db = fb.firestore();
+        this.storage = fb.storage();
     }
 
     login(email, password) {
@@ -40,6 +42,15 @@ class FirebaseHelper {
 
     getFacebookCredentials(token) {
         return this.authClasses.FacebookAuthProvider.credential(token);
+    }
+
+    getUserInfo() {
+        return this.auth.currentUser;
+    }
+
+    putUserAvatar(userId, blob) {
+        const ref = this.storage.ref().child(`avatar/${userId}`);
+        return ref.put(blob);
     }
 }
 
