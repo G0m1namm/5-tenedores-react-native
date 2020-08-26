@@ -8,7 +8,7 @@ import fb from '../../utils/firebase'
 const { width } = Dimensions.get("window");
 const MAX_WiDTH = width - 150;
 
-function InfoUser({ userInfo, toastRef }) {
+function InfoUser({ userInfo, toastRef, setLoading, setLoaderText }) {
     const { uid, photoURL, email, displayName } = userInfo;
 
     const onChangeAvatar = async () => {
@@ -27,8 +27,13 @@ function InfoUser({ userInfo, toastRef }) {
                 toastRef.current.show("Has cerrado la galeria de imagenes");
             } else {
                 try {
+                    setLoaderText("Actualizando avatar");
+                    setLoading(true);
                     await uploadImage(result.uri);
+                    await fb.uploadPhotoURL(uid)
+                    setLoading(false);
                 } catch (error) {
+                    setLoading(false);
                     toastRef.current.show("Error al subir el avatar")
                 }
             }
@@ -67,6 +72,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
+        marginBottom: 20
     },
     avatarContainer: {
         margin: 10,

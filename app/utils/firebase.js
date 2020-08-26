@@ -52,6 +52,22 @@ class FirebaseHelper {
         const ref = this.storage.ref().child(`avatar/${userId}`);
         return ref.put(blob);
     }
+
+    async uploadPhotoURL(userId) {
+        try {
+            const response = await this.storage.ref(`avatar/${userId}`).getDownloadURL();
+            const data = { photoURL: response };
+            await this.getUserInfo().updateProfile(data);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    reAuthenticate(password) {
+        const user = this.getUserInfo();
+        const credentials = this.authClasses.EmailAuthProvider.credential(user.email, password);
+        return user.reauthenticateWithCredential(credentials);
+    }
 }
 
 export default new FirebaseHelper()
