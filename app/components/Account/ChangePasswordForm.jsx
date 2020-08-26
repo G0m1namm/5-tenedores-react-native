@@ -48,25 +48,29 @@ function ChangePasswordForm({ setShowModal, toastRef }) {
             setBtnLoading(true);
             await tryUpdatePassword();
             setBtnLoading(false);
-            setRefresh(prev => !prev);
-            setShowModal(false);
+            if (error) {
+                setRefresh(prev => !prev);
+                setShowModal(false);
+            }
         }
     }
 
     const tryUpdatePassword = async () => {
         try {
             await fb.getUserInfo().updatePassword(formData.newPass)
-            toastRef.current.show("Correo electrónico actualizado");
+            toastRef.current.show("Contraseña actualizada");
             await tryReAuth();
         } catch (error) {
             setBtnLoading(false);
             toastRef.current.show("Error al actualizar la información");
+            console.log("cosas 2", error);
         }
     }
 
     const tryReAuth = async () => {
         try {
             await fb.reAuthenticate(formData.newPass);
+            await fb.logout();
         } catch (error) {
             setError({ actualPass: "La contraseña no es correcta" });
         }
