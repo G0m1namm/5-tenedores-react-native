@@ -23,7 +23,7 @@ export default Modal
 const styles = StyleSheet.create({
     overlay: {
         height: "auto",
-        marginHorizontal: 30,
+        marginHorizontal: 20,
         backgroundColor: "#fff"
     }
 })

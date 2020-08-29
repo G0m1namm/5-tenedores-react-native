@@ -53,9 +53,13 @@ class FirebaseHelper {
         return ref.put(blob);
     }
 
+    getStorageRef(name) {
+        return this.storage.ref(name);
+    }
+
     async uploadPhotoURL(userId) {
         try {
-            const response = await this.storage.ref(`avatar/${userId}`).getDownloadURL();
+            const response = await this.getStorageRef(`avatar/${userId}`).getDownloadURL();
             const data = { photoURL: response };
             await this.getUserInfo().updateProfile(data);
         } catch (error) {
@@ -67,6 +71,10 @@ class FirebaseHelper {
         const user = this.getUserInfo();
         const credentials = this.authClasses.EmailAuthProvider.credential(user.email, password);
         return user.reauthenticateWithCredential(credentials);
+    }
+
+    saveCollectiondata(collection, data) {
+        return this.db.collection(collection).add(data);
     }
 }
 
