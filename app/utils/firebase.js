@@ -76,6 +76,10 @@ class FirebaseHelper {
     saveCollectiondata(collection, data) {
         return this.db.collection(collection).add(data);
     }
+
+    getCollectionData(collection) {
+        return this.db.collection(collection).get()
+    }
 }
 
 export default new FirebaseHelper()
