@@ -3,16 +3,22 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator }
 import { size } from 'lodash'
 import Loading from '../../components/Loading'
 import { Image } from 'react-native-elements'
+import { useNavigation } from '@react-navigation/native'
 
-export default function ListRestaurants({ restaurants }) {
+export default function ListRestaurants({ restaurants, handleLoadMore, isLoading }) {
+    const navigation = useNavigation();
+
     return (
         <View>
             {(size(restaurants) > 0) ?
                 (
                     <FlatList
                         data={restaurants}
-                        keyExtractor={item => item.id}
-                        renderItem={(item) => <Restaurant restaurant={item} />}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={(item) => <Restaurant restaurant={item} navigation={navigation} />}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={<FooterList isLoading={isLoading} />}
+                        onEndReached={handleLoadMore}
                     />
                 ) : (<Loading isVisible={true} text="Cargando restaurantes..." />)
             }
@@ -20,12 +26,12 @@ export default function ListRestaurants({ restaurants }) {
     )
 }
 
-const Restaurant = ({ restaurant }) => {
-    const { images, name, address, description } = restaurant.item;
+const Restaurant = ({ restaurant, navigation }) => {
+    const { images, id, name, address, description } = restaurant.item;
     const imageRestaurant = images[0];
 
     const goToRestaurants = () => {
-        console.log("aa");
+        navigation.navigate("restaurant-view", { id, name });
     }
 
     return (
@@ -49,6 +55,22 @@ const Restaurant = ({ restaurant }) => {
     )
 }
 
+const FooterList = ({ isLoading }) => {
+    if (isLoading) {
+        return (
+            <View style={styles.footerList}>
+                <ActivityIndicator />
+            </View>
+        )
+    } else {
+        return (
+            <View style={styles.footerList}>
+                <Text>No quedan restarantes por cargar</Text>
+            </View>
+        )
+    }
+}
+
 const styles = StyleSheet.create({
     restaurant: {
         flex: 1,
@@ -65,5 +87,9 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
+    },
+    footerList: {
+        margin: 10,
+        alignItems: "center"
     }
 })

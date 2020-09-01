@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import fb from '../../utils/firebase'
 import { Icon } from 'react-native-elements';
 import { map } from 'lodash';
 import ListRestaurants from './ListRestaurants';
+import { useFocusEffect } from '@react-navigation/native'
 
-const LIMIT_SIZE = 7;
+const LIMIT_SIZE = 5;
 
 export default function Restaurants({ navigation }) {
     const [user, setUser] = useState(null);
     const [totalRestaurants, setTotalRestaurants] = useState(0);
     const [startRestaurant, setStartRestaurant] = useState(null);
-    const [restaurants, setRestaurants] = useState(null);
+    const [restaurants, setRestaurants] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -20,10 +21,15 @@ export default function Restaurants({ navigation }) {
         })
     }, [])
 
-    useEffect(() => {
-        getTotalRestaurantsLength();
-        getRestaurants();
-    }, [])
+    useFocusEffect(
+        useCallback(
+            () => {
+                getTotalRestaurantsLength();
+                getRestaurants();
+            },
+            [],
+        )
+    )
 
     const getTotalRestaurantsLength = () => {
         fb.getCollectionData("restaurants")
@@ -70,13 +76,13 @@ export default function Restaurants({ navigation }) {
                     return restaurant;
                 })
 
-                setRestaurants(prev => [...prev, ...arrayRestaurants]);
+                setRestaurants(prev => ([...prev, ...arrayRestaurants]));
             })
     }
 
     return (
         <View style={styles.viewBody}>
-            <ListRestaurants restaurants={restaurants} />
+            <ListRestaurants restaurants={restaurants} handleLoadMore={handleLoadMore} isLoading={isLoading} />
             {user &&
                 <Icon
                     type="material-community"
