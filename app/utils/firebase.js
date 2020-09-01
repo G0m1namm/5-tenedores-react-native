@@ -80,6 +80,10 @@ class FirebaseHelper {
     getCollectionData(collection) {
         return this.db.collection(collection).get()
     }
+
+    getCollectionDataById(collection, id) {
+        return this.db.collection(collection).doc(id).get();
+    }
 }
 
 export default new FirebaseHelper()
